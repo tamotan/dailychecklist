@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>日常チェックリスト</title>
+  <meta charset="UTF-8" />
+  <title>日常チェックリスト（Vue版）</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -29,71 +30,37 @@
       margin-left: 8px;
       cursor: pointer;
     }
-    .footer {
-      margin-top: 16px;
-      font-size: 0.85rem;
-      color: #666;
-    }
     button {
       margin-top: 12px;
       padding: 6px 12px;
       font-size: 0.9rem;
       cursor: pointer;
     }
+    .footer {
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: #666;
+    }
   </style>
 </head>
 <body>
-  <h1>日常の実行チェック</h1>
+  <h1>日常の実行チェック（Vue版）</h1>
 
-  <div class="card">
-    <div class="item">
-      <input type="checkbox" id="lock-door">
-      <label for="lock-door">鍵の施錠</label>
-    </div>
-    <div class="item">
-      <input type="checkbox" id="lock-window">
-      <label for="lock-window">窓の施錠</label>
-    </div>
-    <div class="item">
-      <input type="checkbox" id="lights-off">
-      <label for="lights-off">部屋の消灯</label>
-    </div>
+  <div id="app">
+    <div class="card">
+      <div class="item" v-for="item in items" :key="item.key">
+        <input type="checkbox" v-model="item.checked" @change="save(item)">
+        <label>{{ item.label }}</label>
+      </div>
 
-    <button id="clear">チェックをすべて外す</button>
+      <button @click="clearAll">チェックをすべて外す</button>
 
-    <div class="footer">
-      チェック状態はブラウザに保存され、次回開いたときも復元されます。
+      <div class="footer">
+        チェック状態はブラウザに保存され、次回開いたときも復元されます。
+      </div>
     </div>
   </div>
 
-  <script>
-    const items = [
-      { id: 'lock-door', key: 'check_lock_door' },
-      { id: 'lock-window', key: 'check_lock_window' },
-      { id: 'lights-off', key: 'check_lights_off' }
-    ];
-
-    // 保存された状態を読み込み
-    window.addEventListener('DOMContentLoaded', () => {
-      items.forEach(item => {
-        const el = document.getElementById(item.id);
-        const saved = localStorage.getItem(item.key);
-        if (saved === 'true') {
-          el.checked = true;
-        }
-        el.addEventListener('change', () => {
-          localStorage.setItem(item.key, el.checked);
-        });
-      });
-
-      document.getElementById('clear').addEventListener('click', () => {
-        items.forEach(item => {
-          const el = document.getElementById(item.id);
-          el.checked = false;
-          localStorage.setItem(item.key, false);
-        });
-      });
-    });
-  </script>
+  <script src="js/app.js"></script>
 </body>
 </html>
